@@ -1,1 +1,57 @@
 
+name: Daily 3 Commits Workflow
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at 00:00 UTC (05:00 AM Pakistan Time)
+  workflow_dispatch:
+
+permissions:
+  contents: write  # Required to push code changes
+
+jobs:
+  daily-commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Git config
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      # First Commit
+      - name: Append first timestamp to README.md
+        run: |
+          echo "✅ First update: $(date -u)" >> README.md
+          git add README.md
+          git commit -m "First update: $(date -u)" || echo "No changes to commit"
+          git push
+
+      # Delay for 1 minute
+      - name: Pause for 60 seconds
+        run: sleep 60
+
+      # Second Commit
+      - name: Append second timestamp to README.md
+        run: |
+          echo "✅ Second update: $(date -u)" >> README.md
+          git add README.md
+          git commit -m "Second update: $(date -u)" || echo "No changes to commit"
+          git push
+
+      # Delay for 1 minute
+      - name: Pause for 60 seconds
+        run: sleep 60
+
+      # Third Commit
+      - name: Append third timestamp to README.md
+        run: |
+          echo "✅ Third update: $(date -u)" >> README.md
+          git add README.md
+          git commit -m "Third update: $(date -u)" || echo "No changes to commit"
+          git push
+
+      - name: Finished
+        run: echo "✅ All commits completed."
